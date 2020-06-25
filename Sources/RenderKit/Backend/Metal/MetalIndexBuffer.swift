@@ -14,7 +14,8 @@ class MetalIndexBuffer: IndexBuffer {
     }
 
     func updateBuffer(contents: [UInt16]) {
-        hwBuffer.contents().storeBytes(of: contents, as: [UInt16].self)
+        let mem = hwBuffer.contents().bindMemory(to: UInt16.self, capacity: contents.count)
+        mem.assign(from: contents, count: contents.count)
     }
 }
 

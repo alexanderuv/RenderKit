@@ -36,7 +36,7 @@ class MetalDevice: Device {
         MetalPipeline(self.metalDevice, descriptor)
     }
 
-    func createVertexBuffer<T: VertexBuffer<V>, V>(withCount count: Int, vertexType: V.Type) -> Result<T, RenderKitError> {
+    func createVertexBuffer<T: VertexBuffer<V>, V>(withVertexType vertexType: V.Type, count: Int) -> Result<T, RenderKitError> {
         if let newBuffer = MetalVertexBuffer<V>(self.metalDevice, count) {
             return .success(newBuffer as! T)
         }
@@ -45,7 +45,7 @@ class MetalDevice: Device {
     }
 
     func createIndexBuffer(withCount count: Int) -> Result<IndexBuffer, RenderKitError> {
-        let totalLength = count * MemoryLayout<UInt16>.size
+        let totalLength = count * MemoryLayout<UInt16>.stride
         if let newBuffer = metalDevice.makeBuffer(length: totalLength, options: [.storageModeShared]) {
             return .success(MetalIndexBuffer(newBuffer))
         }

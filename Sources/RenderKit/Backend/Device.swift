@@ -5,7 +5,7 @@
 import Foundation
 
 public protocol Device {
-    func createVertexBuffer<T: VertexBuffer<V>, V>(withCount count: Int, vertexType: V.Type) -> Result<T, RenderKitError>
+    func createVertexBuffer<T: VertexBuffer<V>, V>(withVertexType vertexType: V.Type, count: Int) -> Result<T, RenderKitError>
     func createIndexBuffer(withCount: Int) -> Result<IndexBuffer, RenderKitError>
     func createPipeline(descriptor: PipelineDescriptor) -> Pipeline
     func createCommandQueue() -> CommandQueue

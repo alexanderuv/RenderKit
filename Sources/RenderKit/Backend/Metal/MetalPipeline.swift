@@ -13,19 +13,21 @@ let defaultShaders = """
                             return vertex_array[vid];              // 4
                           }
 
-                          fragment float4 basic_fragment() { // 1
-                            return float4(1.0, 0, 0, 1.0);              // 2
+                          fragment half4 basic_fragment() { // 1
+                            return half4(1.0);              // 2
                           }
                           """
 
 class MetalPipeline : Pipeline {
     let pipelineState: MTLRenderPipelineState
+    let shaderLibrary: MTLLibrary
 
     init(_ device: MTLDevice, _ descriptor: PipelineDescriptor) {
         guard let shaderLibrary = try? device.makeLibrary(source: defaultShaders, options: .none)  else {
             fatalError("Unable to create MTLLibrary")
         }
 
+        self.shaderLibrary = shaderLibrary
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         if let vertexShader = descriptor.vertexShader {
             let vertexProgram = shaderLibrary.makeFunction(name: vertexShader)

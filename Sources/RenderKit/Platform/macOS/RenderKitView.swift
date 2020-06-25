@@ -25,13 +25,9 @@ class RenderKitView: NSView, CALayerDelegate, NSWindowDelegate {
     }
 
     func initCommon() {
-        // TODO: this is metal specific
-        self.wantsLayer = true
         self.layerContentsRedrawPolicy = .duringViewResize
         updateTrackingAreas()
         self.layer?.delegate = self
-
-
     }
 
     func setupCVDisplayLink(forScreen screen: NSScreen) {

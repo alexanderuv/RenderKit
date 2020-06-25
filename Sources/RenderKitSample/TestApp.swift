@@ -11,22 +11,21 @@ class ViewController : NSViewController {
     var device: MTLDevice!
     var metalLayer: CAMetalLayer!
     var vertexBuffer: MTLBuffer!
+    var indexBuffer: MTLBuffer!
     var pipelineState: MTLRenderPipelineState!
     var commandQueue: MTLCommandQueue!
 
-
-
     let vertexData: [Float] = [
-        0.0,  1.0, 0.0,
-        -1.0, -1.0, 0.0,
-        1.0, -1.0, 0.0
+        0.0,  1.0, 0.0, 1.0,
+        -1.0, -1.0, 0.0, 1.0,
+        1.0, -1.0, 0.0, 1.0
     ]
 
     let defaultShaders = """
                          vertex float4 basic_vertex(                           // 1
-                           const device packed_float3* vertex_array [[ buffer(0) ]], // 2
+                           const device packed_float4* vertex_array [[ buffer(0) ]], // 2
                            unsigned int vid [[ vertex_id ]]) {                 // 3
-                           return float4(vertex_array[vid], 1.0);              // 4
+                           return vertex_array[vid];              // 4
                          }
 
                          fragment half4 basic_fragment() { // 1
@@ -63,6 +62,9 @@ class ViewController : NSViewController {
         let b = vertexBuffer.contents().bindMemory(to: Float.self, capacity: vertexData.count)
         b.assign(from: vertexData, count: vertexData.count)
         vertexBuffer.didModifyRange(0..<dataSize)
+
+        let indices: [UInt16] = [0,1,2]
+        indexBuffer = device.makeBuffer(bytes: indices, length: MemoryLayout<UInt16>.stride * 3)
         
 //        vertexBuffer = device.makeBuffer(bytes: vertexData, length: dataSize, options: .storageModeManaged) // 2
         
@@ -101,8 +103,12 @@ class ViewController : NSViewController {
                 .makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         renderEncoder.setRenderPipelineState(pipelineState)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        renderEncoder
-                .drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
+        renderEncoder.drawIndexedPrimitives(type: .triangle,
+                        indexCount: 3,
+                        indexType: .uint16,
+                        indexBuffer: indexBuffer,
+                        indexBufferOffset: 0)
+//                .drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
         renderEncoder.endEncoding()
         
         commandBuffer.present(drawable)

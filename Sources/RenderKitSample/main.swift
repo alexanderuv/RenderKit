@@ -4,6 +4,7 @@
 
 import Foundation
 import RenderKit
+import Cocoa
 
 let configuration = EngineConfiguration(
         window: WindowConfiguration(
@@ -13,6 +14,13 @@ let configuration = EngineConfiguration(
         ),
         backend: .metal)
 
-let appRenderer = MyRenderer()
+let appRenderer = SampleRenderer()
 try RenderKitApplication.run(appRenderer, configuration)
 
+// #=====
+
+//let delegate = TestAppDelegate()
+//let app = NSApplication.shared
+//app.delegate = delegate
+//app.setActivationPolicy(.regular)
+//app.run()

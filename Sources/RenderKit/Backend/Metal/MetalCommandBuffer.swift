@@ -14,8 +14,6 @@ class MetalCommandBuffer: CommandBuffer {
     var commandEncoder: MTLRenderCommandEncoder? = nil
     var clearColor: Color = .black
 
-    var renderPassDescriptors: [Int: MTLRenderPassDescriptor] = [:]
-
     public init(nativeBuffer: MTLCommandBuffer) {
         self.nativeBuffer = nativeBuffer
     }
@@ -27,22 +25,15 @@ class MetalCommandBuffer: CommandBuffer {
 
         self.currentSwapChain = swapChain
 
-        let descriptor: MTLRenderPassDescriptor
-        if !renderPassDescriptors.keys.contains(swapChain.id) {
-            guard let drawable = swapChain.metalLayer.nextDrawable() else {
+        guard let drawable = swapChain.metalLayer.nextDrawable() else {
 //                fatalError("Unable to get next drawable from metal layer")
-                return false
-            }
-
-            descriptor = MTLRenderPassDescriptor()
-            descriptor.colorAttachments[0].texture = drawable.texture
-            descriptor.colorAttachments[0].loadAction = .clear
-            descriptor.colorAttachments[0].clearColor = clearColor.toMetal()
-
-            renderPassDescriptors[swapChain.id] = descriptor
-        } else {
-            descriptor = renderPassDescriptors[swapChain.id]!
+            return false
         }
+
+        let descriptor = MTLRenderPassDescriptor()
+        descriptor.colorAttachments[0].texture = drawable.texture
+        descriptor.colorAttachments[0].loadAction = .clear
+        descriptor.colorAttachments[0].clearColor = clearColor.toMetal()
 
         if let encoder = nativeBuffer.makeRenderCommandEncoder(descriptor: descriptor) {
             self.commandEncoder = encoder
@@ -99,7 +90,15 @@ class MetalCommandBuffer: CommandBuffer {
         self.currentIndexBuffer = buffer
     }
 
-    func drawIndexed(type: PrimitiveType, indexCount: Int, indexOffset: Int) {
+    func drawVertices(type: PrimitiveType, count: Int, offset: Int) {
+        guard let encoder = self.commandEncoder else {
+            fatalError("Attempting to call setPipeline outside before calling beginRenderPass")
+        }
+
+        encoder.drawPrimitives(type: type.toMetal(), vertexStart: offset, vertexCount: count)
+    }
+
+    func drawIndexed(primitive: PrimitiveType, indexCount: Int, indexOffset: Int) {
         guard let encoder = self.commandEncoder else {
             fatalError("Attempting to call setPipeline outside before calling beginRenderPass")
         }
@@ -108,7 +107,7 @@ class MetalCommandBuffer: CommandBuffer {
             fatalError("Attempting to call drawIndexed without having set an index buffer")
         }
 
-        encoder.drawIndexedPrimitives(type: type.toMetal(),
+        encoder.drawIndexedPrimitives(type: primitive.toMetal(),
                 indexCount: indexCount,
                 indexType: .uint16,
                 indexBuffer: indexBuffer.hwBuffer,

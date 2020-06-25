@@ -7,7 +7,7 @@ import RenderKit
 
 typealias Vertex = SIMD4<Float>
 
-class MyRenderer: RenderApplicationDelegate {
+class SampleRenderer: RenderApplicationDelegate {
     private var device: Device!
     private var commandQueue: CommandQueue!
     private var vertexBuffer: VertexBuffer<Vertex>!
@@ -20,14 +20,14 @@ class MyRenderer: RenderApplicationDelegate {
 
     func initialize(_ platform: Platform, _ window: Window?) {
         device = try! platform.createDevice()
-        guard let vertexBuffer = try? device.createVertexBuffer(withCount: 3, vertexType: Vertex.self).get() else {
+        guard let vertexBuffer = try? device.createVertexBuffer(withVertexType: Vertex.self, count: 3).get() else {
             fatalError("Error creating a vertexBuffer")
         }
 
         vertexBuffer.updateBuffer(contents: [
-            [-1, 1, 0, 1],
-            [0, -1, 0, 1],
-            [1, 1, 0, 1]
+            [0.0,  1.0, 0.0, 1],
+            [-1.0, -1.0, 0.0, 1],
+            [1.0, -1.0, 0.0, 1]
         ])
 
         guard let indexBuffer = try? device.createIndexBuffer(withCount: 3).get() else {
@@ -54,11 +54,12 @@ class MyRenderer: RenderApplicationDelegate {
         let commandBuffer = commandQueue.createCommandBuffer()
 
         let rendered = commandBuffer.doRenderPass(on: self.swapChain) {
+
             commandBuffer.setPipeline(pipeline)
 
             commandBuffer.setVertexBuffer(vertexBuffer, offset: 0)
             commandBuffer.setIndexBuffer(indexBuffer)
-            commandBuffer.drawIndexed(type: .triangle, indexCount: 3, indexOffset: 0)
+            commandBuffer.drawIndexed(primitive: .triangle, indexCount: 3, indexOffset: 0)
         }
 
         if rendered {
