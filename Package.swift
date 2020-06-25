@@ -1,5 +1,4 @@
-// swift-tools-version:5.2
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -21,8 +20,21 @@ let package = Package(
                     name: "RenderKit",
                     dependencies: [
                         .product(name: "Logging", package: "swift-log"),
-//                        .product(name: "NIO", package: "swift-nio")
+                        .target(name: "RenderKit-Apple", condition: .when(platforms: [.macOS, .iOS])),
+                        .target(name: "RenderKit-Linux", condition: .when(platforms: [.linux])),
+                        .target(name: "RenderKit-Windows", condition: .when(platforms: [.windows]))
                     ]),
+            .target(
+                    name: "RenderKit-Core"),
+            .target(
+                    name: "RenderKit-Apple",
+                    dependencies: ["RenderKit-Core"]),
+            .target(
+                    name: "RenderKit-Linux",
+                    dependencies: ["RenderKit-Core"]),
+            .target(
+                    name: "RenderKit-Windows",
+                    dependencies: ["RenderKit-Core"]),
             .target(
                     name: "RenderKitSample",
                     dependencies: ["RenderKit"]),
