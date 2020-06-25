@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/30/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 class MetalDevice: Device {
     let metalDevice: MTLDevice
@@ -53,4 +53,3 @@ class MetalDevice: Device {
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
     }
 }
-#endif

@@ -2,13 +2,17 @@
 // Created by Alexander Ubillus on 3/27/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
-class PlatformMetal: Platform {
+public class PlatformMetal: Platform {
 
-    func createDevice() throws -> Device {
+    public static func newObj() -> PlatformMetal {
+        PlatformMetal()
+    }
+
+    public func createDevice() throws -> Device {
         guard let device = MTLCreateSystemDefaultDevice() else {
             throw RenderKitError.errorInitializingDriver
         }
@@ -16,5 +20,3 @@ class PlatformMetal: Platform {
         return MetalDevice(device)
     }
 }
-
-#endif

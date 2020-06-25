@@ -5,6 +5,7 @@
 #if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 extension PixelFormat {
     func toMetal() -> MTLPixelFormat {

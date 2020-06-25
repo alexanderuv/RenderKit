@@ -2,7 +2,6 @@
 // Created by Alexander Ubillus on 3/27/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 #if os(macOS)
 import AppKit
@@ -18,8 +17,9 @@ typealias PlatApplication = UIApplication
 #endif
 
 import MetalKit
+import RenderKitCore
 
-class CocoaWindow: Window {
+public class CocoaWindow: Window {
     var clearColor: Color = .red
 
     internal let nsWindow: RenderKitWindow
@@ -27,7 +27,7 @@ class CocoaWindow: Window {
     var windowShouldClose = false
     var renderDelegate: (() -> Void)?
 
-    required init(_ configuration: WindowConfiguration) {
+    public required init(_ configuration: WindowConfiguration) {
         let app = PlatApplication.shared
         app.delegate = RenderKitAppDelegate.shared
 
@@ -64,24 +64,24 @@ class CocoaWindow: Window {
         nsWindow.isRestorable = false
     }
 
-    func show() {
+    public func show() {
         nsWindow.orderFront(nil)
     }
 
-    func focusWindow() {
+    public func focusWindow() {
         NSApp.activate(ignoringOtherApps: true)
         nsWindow.makeKeyAndOrderFront(nil)
     }
 
-    func hide() {
+    public func hide() {
         nsWindow.orderBack(nil)
     }
 
-    func shouldClose() -> Bool {
+    public func shouldClose() -> Bool {
         windowShouldClose
     }
 
-    func pollEvents() {
+    public func pollEvents() {
         while true {
             let event = NSApp.nextEvent(
                     matching: .any,
@@ -97,7 +97,7 @@ class CocoaWindow: Window {
         }
     }
 
-    func getNativeWindow() -> Any {
+    public func getNativeWindow() -> Any {
         nsWindow
     }
 
@@ -105,7 +105,7 @@ class CocoaWindow: Window {
         renderDelegate?()
     }
 
-    func runEventLoop(_ delegate: @escaping () -> Void) {
+    public func runEventLoop(_ delegate: @escaping () -> Void) {
         renderDelegate = delegate
         NSApp.run()
     }
@@ -130,5 +130,3 @@ func getStyleMask(_ configuration: WindowConfiguration) -> NSWindow.StyleMask {
 
     return styleMask
 }
-
-#endif

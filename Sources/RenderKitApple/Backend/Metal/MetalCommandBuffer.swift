@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/30/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 class MetalCommandBuffer: CommandBuffer {
 
@@ -114,5 +114,3 @@ class MetalCommandBuffer: CommandBuffer {
                 indexBufferOffset: indexOffset)
     }
 }
-
-#endif

@@ -3,27 +3,25 @@
 //
 
 import Foundation
-
-public protocol Platform {
-    func createDevice() throws -> Device
-}
+import RenderKitCore
+import RenderKitApple
 
 func createPlatform(forBackend backend: Backend) throws -> Platform {
     switch backend {
     case .platformDefault:
         #if os(macOS) || os(iOS)
-        return PlatformMetal()
+        return PlatformMetal.newObj()
         #else
         throw RenderKitError.unsupportedPlatform
         #endif
     case .metal:
         #if os(macOS) || os(iOS)
-        return PlatformMetal()
+        return PlatformMetal.newObj()
         #else
         throw RenderKitError.unsupportedPlatform
         #endif
-    case .vulkan:
-        return PlatformVulkan()
+//    case .vulkan:
+//        return PlatformVulkan()
     default:
         throw RenderKitError.unsupportedPlatform
     }

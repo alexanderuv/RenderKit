@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 class MetalVertexBuffer<T> : VertexBuffer<T> {
 
@@ -16,8 +16,10 @@ class MetalVertexBuffer<T> : VertexBuffer<T> {
         guard newBuffer != nil else {
             return nil
         }
-        
+
         self.hwBuffer = newBuffer!
+        super.init()
+
     }
 
     override func updateBuffer(contents: [T]) {
@@ -32,5 +34,3 @@ class MetalVertexBuffer<T> : VertexBuffer<T> {
         hwBuffer
     }
 }
-
-#endif

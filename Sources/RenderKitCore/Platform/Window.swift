@@ -1,5 +1,5 @@
 //
-// Created by Alexander Ubillus on 3/27/20.
+// Created by Alexander Ubillus on 6/24/20.
 //
 
 import Foundation
@@ -15,12 +15,4 @@ public protocol Window {
     func getNativeWindow() -> Any
 
     func runEventLoop(_ delegate: @escaping () -> Void)
-}
-
-func createNativeWindow(_ configuration: WindowConfiguration) throws -> Window {
-    #if os(macOS)
-    return CocoaWindow(configuration)
-    #else
-    throw RenderKitError.errorCreatingNativeWindow
-    #endif
 }

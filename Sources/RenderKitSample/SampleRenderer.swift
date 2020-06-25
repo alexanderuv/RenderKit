@@ -4,6 +4,7 @@
 
 import Foundation
 import RenderKit
+import RenderKitCore
 
 typealias Vertex = SIMD4<Float>
 

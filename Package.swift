@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -20,21 +20,24 @@ let package = Package(
                     name: "RenderKit",
                     dependencies: [
                         .product(name: "Logging", package: "swift-log"),
-                        .target(name: "RenderKit-Apple", condition: .when(platforms: [.macOS, .iOS])),
-                        .target(name: "RenderKit-Linux", condition: .when(platforms: [.linux])),
-                        .target(name: "RenderKit-Windows", condition: .when(platforms: [.windows]))
+//                        .target(name: "RenderKitApple", condition: .when(platforms: [.macOS, .iOS])),
+//                        .target(name: "RenderKitLinux", condition: .when(platforms: [.linux])),
+//                        .target(name: "RenderKitWindows", condition: .when(platforms: [.windows]))
+                        .target(name: "RenderKitApple"),
+                        .target(name: "RenderKitLinux"),
+                        .target(name: "RenderKitWindows")
                     ]),
             .target(
-                    name: "RenderKit-Core"),
+                    name: "RenderKitCore"),
             .target(
-                    name: "RenderKit-Apple",
-                    dependencies: ["RenderKit-Core"]),
+                    name: "RenderKitApple",
+                    dependencies: ["RenderKitCore"]),
             .target(
-                    name: "RenderKit-Linux",
-                    dependencies: ["RenderKit-Core"]),
+                    name: "RenderKitLinux",
+                    dependencies: ["RenderKitCore"]),
             .target(
-                    name: "RenderKit-Windows",
-                    dependencies: ["RenderKit-Core"]),
+                    name: "RenderKitWindows",
+                    dependencies: ["RenderKitCore"]),
             .target(
                     name: "RenderKitSample",
                     dependencies: ["RenderKit"]),

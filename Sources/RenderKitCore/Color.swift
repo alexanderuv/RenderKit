@@ -24,12 +24,12 @@ public struct Color {
     public init() {
     }
 
-    static let black = Color(red: 0, green: 0, blue: 0)
-    static let white = Color(red: 1, green: 1, blue: 1)
-    static let red = Color(red: 1, green: 0, blue: 0)
-    static let green = Color(red: 0, green: 1, blue: 0)
-    static let blue = Color(red: 0, green: 0, blue: 1)
-    static let cyan = Color(red: 0, green: 1, blue: 1)
-    static let magenta = Color(red: 1, green: 0, blue: 1)
-    static let noche = Color(red: 1, green: 1, blue: 0)
+    public static let black = Color(red: 0, green: 0, blue: 0)
+    public static let white = Color(red: 1, green: 1, blue: 1)
+    public static let red = Color(red: 1, green: 0, blue: 0)
+    public static let green = Color(red: 0, green: 1, blue: 0)
+    public static let blue = Color(red: 0, green: 0, blue: 1)
+    public static let cyan = Color(red: 0, green: 1, blue: 1)
+    public static let magenta = Color(red: 1, green: 0, blue: 1)
+    public static let noche = Color(red: 1, green: 1, blue: 0)
 }

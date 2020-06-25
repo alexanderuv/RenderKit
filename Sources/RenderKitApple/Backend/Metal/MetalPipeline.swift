@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 let defaultShaders = """
                           vertex float4 basic_vertex(                           // 1
@@ -43,5 +43,3 @@ class MetalPipeline : Pipeline {
         pipelineState = try! device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
 }
-
-#endif

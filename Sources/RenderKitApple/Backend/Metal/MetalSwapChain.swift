@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 fileprivate func createMetalLayer(_ device: MetalDevice) -> CAMetalLayer {
     let metalLayer = CAMetalLayer()
@@ -42,4 +42,3 @@ class MetalSwapChain: SwapChain {
         view.layer = metalLayer
     }
 }
-#endif

@@ -2,9 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 import MetalKit
+import RenderKitCore
 
 class MetalIndexBuffer: IndexBuffer {
     let hwBuffer: MTLBuffer
@@ -18,5 +18,3 @@ class MetalIndexBuffer: IndexBuffer {
         mem.assign(from: contents, count: contents.count)
     }
 }
-
-#endif

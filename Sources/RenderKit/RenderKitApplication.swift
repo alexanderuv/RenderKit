@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import RenderKitCore
 
 public final class RenderKitApplication {
 
