@@ -4,7 +4,6 @@
 
 import Foundation
 import RenderKit
-import RenderKitCore
 
 typealias Vertex = SIMD4<Float>
 
@@ -19,14 +18,14 @@ class SampleRenderer: RenderApplicationDelegate {
     init() {
     }
 
-    func initialize(_ platform: Platform, _ window: Window?) {
-        device = try! platform.createDevice()
+    func initialize(_ backend: BackendProtocol, _ window: Window?) {
+        device = try! backend.createDevice()
         guard let vertexBuffer = try? device.createVertexBuffer(withVertexType: Vertex.self, count: 3).get() else {
             fatalError("Error creating a vertexBuffer")
         }
 
         vertexBuffer.updateBuffer(contents: [
-            [0.0,  1.0, 0.0, 1],
+            [0.0, 1.0, 0.0, 1],
             [-1.0, -1.0, 0.0, 1],
             [1.0, -1.0, 0.0, 1]
         ])

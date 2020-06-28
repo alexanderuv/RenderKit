@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import RenderKitCore
 
 public final class RenderKitApplication {
 
@@ -17,14 +16,13 @@ public final class RenderKitApplication {
 
     public class func run(_ delegate: RenderApplicationDelegate, _ configuration: EngineConfiguration) throws {
         let backend = configuration.backend
-        let window = try createNativeWindow(configuration.window)
         let platform = try createPlatform(forBackend: backend)
+        let window = try platform.createWindow(configuration.window)
+        let backendImpl = backend.createBackend(forPlatform: platform, configuration: configuration)
 
-        delegate.initialize(platform, window)
+        delegate.initialize(backendImpl, window)
 
         window.show()
-        window.focusWindow()
-
         window.runEventLoop() {
             delegate.render()
         }
@@ -32,7 +30,7 @@ public final class RenderKitApplication {
 }
 
 public protocol RenderApplicationDelegate {
-    func initialize(_ platform: Platform, _ window: Window?)
+    func initialize(_ backend: BackendProtocol, _ window: Window?)
     func render()
     func finalize()
 }

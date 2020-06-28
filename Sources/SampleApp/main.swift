@@ -4,7 +4,6 @@
 
 import Foundation
 import RenderKit
-import RenderKitCore
 import Cocoa
 
 let configuration = EngineConfiguration(

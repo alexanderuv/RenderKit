@@ -2,9 +2,10 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
+#if os(macOS) || os(iOS)
+
 import Foundation
 import MetalKit
-import RenderKitCore
 
 class MetalCommandQueue: CommandQueue {
     let commandQueue: MTLCommandQueue
@@ -21,3 +22,5 @@ class MetalCommandQueue: CommandQueue {
         return MetalCommandBuffer(nativeBuffer: nativeCommandBuffer)
     }
 }
+
+#endif

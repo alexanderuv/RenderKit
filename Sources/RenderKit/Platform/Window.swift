@@ -3,17 +3,12 @@
 //
 
 import Foundation
-import RenderKitCore
-import RenderKitApple
 
-extension Window {
+public protocol Window {
+    init(_ configuration: WindowConfiguration)
 
-}
+    func show()
+    func getNativeWindow() -> Any
 
-func createNativeWindow(_ configuration: WindowConfiguration) throws -> Window {
-    #if os(macOS)
-    return CocoaWindow(configuration)
-    #else
-    throw RenderKitError.errorCreatingNativeWindow
-    #endif
+    func runEventLoop(_ delegate: @escaping () -> Void)
 }

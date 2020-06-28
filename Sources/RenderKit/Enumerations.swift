@@ -12,13 +12,6 @@ public enum PrimitiveType {
     case point
 }
 
-public enum Backend {
-    case platformDefault
-    case metal
-    case directX
-    case vulkan
-}
-
 public enum RenderKitError: Error {
     case backendNotSupportedInThisPlatform
     case unsupportedPlatform

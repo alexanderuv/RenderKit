@@ -17,14 +17,12 @@ typealias PlatApplication = UIApplication
 #endif
 
 import MetalKit
-import RenderKitCore
 
 public class CocoaWindow: Window {
     var clearColor: Color = .red
 
     internal let nsWindow: RenderKitWindow
     let viewController: RenderKitViewController
-    var windowShouldClose = false
     var renderDelegate: (() -> Void)?
 
     public required init(_ configuration: WindowConfiguration) {
@@ -66,35 +64,9 @@ public class CocoaWindow: Window {
 
     public func show() {
         nsWindow.orderFront(nil)
-    }
 
-    public func focusWindow() {
         NSApp.activate(ignoringOtherApps: true)
         nsWindow.makeKeyAndOrderFront(nil)
-    }
-
-    public func hide() {
-        nsWindow.orderBack(nil)
-    }
-
-    public func shouldClose() -> Bool {
-        windowShouldClose
-    }
-
-    public func pollEvents() {
-        while true {
-            let event = NSApp.nextEvent(
-                    matching: .any,
-                    until: .distantPast,
-                    inMode: .default,
-                    dequeue: true)
-
-            if event == nil {
-                break
-            }
-
-            NSApp.sendEvent(event!)
-        }
     }
 
     public func getNativeWindow() -> Any {

@@ -3,26 +3,17 @@
 //
 
 import Foundation
-import RenderKitCore
-import RenderKitApple
+
+public protocol Platform {
+    func createWindow(_ configuration: WindowConfiguration) throws -> Window
+}
 
 func createPlatform(forBackend backend: Backend) throws -> Platform {
-    switch backend {
-    case .platformDefault:
-        #if os(macOS) || os(iOS)
-        return PlatformMetal.newObj()
-        #else
-        throw RenderKitError.unsupportedPlatform
-        #endif
-    case .metal:
-        #if os(macOS) || os(iOS)
-        return PlatformMetal.newObj()
-        #else
-        throw RenderKitError.unsupportedPlatform
-        #endif
-//    case .vulkan:
-//        return PlatformVulkan()
-    default:
-        throw RenderKitError.unsupportedPlatform
-    }
+    #if os(macOS)
+    return MacOSPlatform()
+    #elseif os(Linux)
+    return LinuxPlatform()
+    #else
+    fatalError("Unsupported platform")
+    #endif
 }
