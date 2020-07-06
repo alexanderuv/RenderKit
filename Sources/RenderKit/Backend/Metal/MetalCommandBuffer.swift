@@ -14,6 +14,7 @@ class MetalCommandBuffer: CommandBuffer {
     var currentSwapChain: MetalSwapChain? = nil
     var commandEncoder: MTLRenderCommandEncoder? = nil
     var clearColor: Color = .black
+    var currentDrawable: MTLDrawable? = nil
 
     public init(nativeBuffer: MTLCommandBuffer) {
         self.nativeBuffer = nativeBuffer
@@ -27,9 +28,11 @@ class MetalCommandBuffer: CommandBuffer {
         self.currentSwapChain = swapChain
 
         guard let drawable = swapChain.metalLayer.nextDrawable() else {
-//                fatalError("Unable to get next drawable from metal layer")
+            print("Unable to get next drawable from metal layer")
             return false
         }
+        
+        self.currentDrawable = drawable
 
         let descriptor = MTLRenderPassDescriptor()
         descriptor.colorAttachments[0].texture = drawable.texture
@@ -61,13 +64,13 @@ class MetalCommandBuffer: CommandBuffer {
     }
 
     func submit() {
-        if let drawable = self.currentSwapChain!.metalLayer.nextDrawable() {
+        if let drawable = self.currentDrawable {
             self.nativeBuffer.present(drawable)
             self.nativeBuffer.commit()
         }
     }
 
-    func setVertexBuffer<T: VertexBuffer<V>, V>(_ buffer: T, offset: Int) {
+    func setVertexBuffer(_ buffer: VertexBuffer, offset: Int) {
         guard let buffer = buffer.unwrap() as? MTLBuffer else {
             fatalError("Expecting MetalSwapChain but got something else")
         }

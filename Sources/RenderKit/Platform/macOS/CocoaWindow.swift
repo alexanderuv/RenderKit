@@ -19,15 +19,19 @@ typealias PlatApplication = UIApplication
 import MetalKit
 
 public class CocoaWindow: Window {
-    var clearColor: Color = .red
 
     internal let nsWindow: RenderKitWindow
+    internal let nsWindowDelegate: RenderKitWindowDelegate
     let viewController: RenderKitViewController
-    var renderDelegate: (() -> Void)?
+
+    // event handlers
+    public var keyboardEventHandler: ((KeyboardEvent) -> ())? = nil
+    public var mouseEventHandler: ((MouseEvent) -> ())? = nil
+    public var renderEventHandler: ((RenderEvent) -> ())? = nil
+    public var windowEventHandler: ((WindowEvent) -> ())? = nil
 
     public required init(_ configuration: WindowConfiguration) {
-        let app = PlatApplication.shared
-        app.delegate = RenderKitAppDelegate.shared
+        nsWindowDelegate = RenderKitWindowDelegate()
 
         // create NSWindow
         let contentRect = NSMakeRect(0, 0, CGFloat(configuration.width), CGFloat(configuration.height));
@@ -55,7 +59,9 @@ public class CocoaWindow: Window {
             nsWindow.zoom(nil)
         }
 
+        nsWindowDelegate.window = self
         nsWindow.title = configuration.title
+        nsWindow.delegate = nsWindowDelegate
         nsWindow.contentView = viewController.view
         nsWindow.makeFirstResponder(nsWindow.contentView)
         nsWindow.acceptsMouseMovedEvents = true
@@ -73,17 +79,52 @@ public class CocoaWindow: Window {
         nsWindow
     }
 
-    func render() {
-        renderDelegate?()
-    }
-
-    public func runEventLoop(_ delegate: @escaping () -> Void) {
-        renderDelegate = delegate
-        NSApp.run()
-    }
-
     func tearDown() {
+        // do appropriate tear down
+    }
 
+    public func pollEvents() {
+        autoreleasepool {
+            if !MacOSPlatform.finishedLaunching {
+                NSApp.run()
+            }
+
+            while true {
+                guard let event = NSApp.nextEvent(
+                        matching: .any,
+                        until: Date.distantPast,
+                        inMode: .default,
+                        dequeue: true) else {
+                    break
+                }
+
+                NSApp.sendEvent(event)
+            }
+        }
+    }
+
+    func raiseKeyboardEvent(_ event: KeyboardEvent) {
+        self.keyboardEventHandler?(event)
+    }
+
+    func raiseMouseEvent(_ event: MouseEvent) {
+        self.mouseEventHandler?(event)
+    }
+
+    func raiseRenderEvent(_ event: RenderEvent) {
+        self.renderEventHandler?(event)
+    }
+
+    func raiseWindowEvent(_ event: WindowEvent) {
+        self.windowEventHandler?(event)
+    }
+}
+
+class RenderKitWindowDelegate: NSObject, NSWindowDelegate {
+    var window: CocoaWindow!
+
+    func windowWillClose(_ notification: Notification) {
+        window.raiseWindowEvent(WindowEvent(type: .close))
     }
 }
 

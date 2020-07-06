@@ -7,7 +7,3 @@ import Foundation
 public protocol SwapChain {
     var id: Int { get }
 }
-
-class NoopSwapChain: SwapChain {
-    var id: Int = 0
-}

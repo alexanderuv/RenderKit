@@ -13,11 +13,13 @@ public struct ColorAttachmentDescriptor {
 }
 
 public struct PipelineDescriptor {
-    public var vertexShader: String?
-    public var fragmentShader: String?
+    public let vertexLayout: BufferLayout
+    public let shader: Shader
     public var colorAttachments = [ColorAttachmentDescriptor()]
 
-    public init() {
+    public init(vertexLayout: BufferLayout, shader: Shader) {
+        self.vertexLayout = vertexLayout
+        self.shader = shader
     }
 }
 

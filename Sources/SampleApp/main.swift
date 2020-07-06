@@ -4,23 +4,12 @@
 
 import Foundation
 import RenderKit
-import Cocoa
 
-let configuration = EngineConfiguration(
-        window: WindowConfiguration(
-                title: "My demo app",
-                width: 800,
-                height: 600
-        ),
-        backend: .metal)
+let configuration = WindowConfiguration(
+        title: "My demo app",
+        width: 800,
+        height: 600
+)
 
-let appRenderer = SampleRenderer()
-try RenderKitApplication.run(appRenderer, configuration)
-
-// #=====
-
-//let delegate = TestAppDelegate()
-//let app = NSApplication.shared
-//app.delegate = delegate
-//app.setActivationPolicy(.regular)
-//app.run()
+let app = SampleApplication()
+try app.run(configuration)

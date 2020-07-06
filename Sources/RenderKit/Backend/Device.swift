@@ -5,10 +5,12 @@
 import Foundation
 
 public protocol Device {
-    func createVertexBuffer<T: VertexBuffer<V>, V>(withVertexType vertexType: V.Type, count: Int) -> Result<T, RenderKitError>
+    func createVertexBuffer(withLayout layout: BufferLayout, count: Int) -> Result<VertexBuffer, RenderKitError>
     func createIndexBuffer(withCount: Int) -> Result<IndexBuffer, RenderKitError>
     func createPipeline(descriptor: PipelineDescriptor) -> Pipeline
     func createCommandQueue() -> CommandQueue
     func createSwapChain(fromWindow window: Window) -> SwapChain
     func createSwapChain(offscreenSize size: NSSize) -> SwapChain
+    
+    func unwrap() -> Any?
 }

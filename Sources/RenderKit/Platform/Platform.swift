@@ -5,10 +5,11 @@
 import Foundation
 
 public protocol Platform {
+    init()
     func createWindow(_ configuration: WindowConfiguration) throws -> Window
 }
 
-func createPlatform(forBackend backend: Backend) throws -> Platform {
+public func createPlatform() throws -> Platform {
     #if os(macOS)
     return MacOSPlatform()
     #elseif os(Linux)
@@ -16,4 +17,15 @@ func createPlatform(forBackend backend: Backend) throws -> Platform {
     #else
     fatalError("Unsupported platform")
     #endif
+}
+
+extension Dictionary where Value: Hashable {
+    func invert() -> [Value: Key] {
+        var result = [Value: Key]()
+        for (k, v) in self {
+            result[v] = k
+        }
+
+        return result
+    }
 }

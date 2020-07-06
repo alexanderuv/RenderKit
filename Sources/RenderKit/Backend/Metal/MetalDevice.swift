@@ -37,9 +37,9 @@ class MetalDevice: Device {
         MetalPipeline(self.metalDevice, descriptor)
     }
 
-    func createVertexBuffer<T: VertexBuffer<V>, V>(withVertexType vertexType: V.Type, count: Int) -> Result<T, RenderKitError> {
-        if let newBuffer = MetalVertexBuffer<V>(self.metalDevice, count) {
-            return .success(newBuffer as! T)
+    func createVertexBuffer(withLayout layout: BufferLayout, count: Int) -> Result<VertexBuffer, RenderKitError> {
+        if let newBuffer = MetalVertexBuffer(self.metalDevice, layout, count) {
+            return .success(newBuffer)
         }
 
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
@@ -52,6 +52,10 @@ class MetalDevice: Device {
         }
 
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
+    }
+    
+    func unwrap() -> Any? {
+        self.metalDevice
     }
 }
 

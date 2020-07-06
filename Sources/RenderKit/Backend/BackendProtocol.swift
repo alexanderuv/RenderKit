@@ -16,7 +16,7 @@ public enum Backend {
 }
 
 extension Backend {
-    public func createBackend(forPlatform platform: Platform, configuration: EngineConfiguration) -> BackendProtocol {
+    public func createBackend(forPlatform platform: Platform) -> BackendProtocol {
         switch self {
         case .platformDefault:
             #if os(macOS)
