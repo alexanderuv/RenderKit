@@ -3,6 +3,7 @@
 //
 
 #if os(macOS) || os(iOS)
+
 import Foundation
 import MetalKit
 

@@ -3,16 +3,9 @@
 //
 
 #if os(macOS) || os(iOS)
+
 import Foundation
 import MetalKit
-
-fileprivate func createMetalLayer(_ device: MetalDevice) -> CAMetalLayer {
-    let metalLayer = CAMetalLayer()
-    metalLayer.device = device.metalDevice
-    metalLayer.isOpaque = true
-
-    return metalLayer
-}
 
 class MetalSwapChain: SwapChain {
 
@@ -25,14 +18,14 @@ class MetalSwapChain: SwapChain {
     init(_ device: MetalDevice, _ size: NSSize) {
         id = MetalSwapChain.counter.incrementAndGet()
 
-        metalLayer = createMetalLayer(device)
+        metalLayer = MetalSwapChain.createMetalLayer(device)
         metalLayer.drawableSize = size
     }
 
     init(_ device: MetalDevice, _ window: CocoaWindow) {
         id = MetalSwapChain.counter.incrementAndGet()
 
-        metalLayer = createMetalLayer(device)
+        metalLayer = MetalSwapChain.createMetalLayer(device)
         let view = window.viewController.view
 
         metalLayer.drawableSize = view.convertToBacking(view.bounds.size)
@@ -41,5 +34,14 @@ class MetalSwapChain: SwapChain {
         view.wantsLayer = true
         view.layer = metalLayer
     }
+
+    private static func createMetalLayer(_ device: MetalDevice) -> CAMetalLayer {
+        let metalLayer = CAMetalLayer()
+        metalLayer.device = device.metalDevice
+        metalLayer.isOpaque = true
+
+        return metalLayer
+    }
 }
+
 #endif

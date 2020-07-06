@@ -1,5 +1,4 @@
 // swift-tools-version:5.2
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -11,21 +10,19 @@ let package = Package(
         products: [
             .library(name: "RenderKitStatic", type: .static, targets: ["RenderKit"]),
             .library(name: "RenderKitDynamic", type: .dynamic, targets: ["RenderKit"]),
-            .executable(name: "RenderKitSample", targets: ["RenderKitSample"]),
+            .executable(name: "SampleApp", targets: ["SampleApp"]),
         ],
         dependencies: [
             .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
-            .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
         ],
         targets: [
             .target(
                     name: "RenderKit",
                     dependencies: [
-                        .product(name: "Logging", package: "swift-log"),
-                        .product(name: "NIO", package: "swift-nio")
+                        .product(name: "Logging", package: "swift-log")
                     ]),
             .target(
-                    name: "RenderKitSample",
+                    name: "SampleApp",
                     dependencies: ["RenderKit"]),
             .testTarget(
                     name: "RenderKitTests",

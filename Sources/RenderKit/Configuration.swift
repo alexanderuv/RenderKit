@@ -14,19 +14,17 @@ public struct WindowConfiguration {
     public var floating = false
     public var maximized = false
 
+    public init(title: String) {
+        self.init(title: title, width: 800, height: 600)
+    }
+
+    public init(fullscreenAppName title: String) {
+        self.init(title: title, width: -1, height: -1)
+    }
+
     public init(title: String, width: Int, height: Int) {
         self.title = title
         self.width = width
         self.height = height
-    }
-}
-
-public struct EngineConfiguration {
-    public var window: WindowConfiguration
-    public var backend: Backend
-
-    public init(window: WindowConfiguration?, backend: Backend) {
-        self.window = window ?? WindowConfiguration(title: "app", width: 800, height: 600)
-        self.backend = backend
     }
 }

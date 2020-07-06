@@ -5,26 +5,27 @@
 import Foundation
 
 public protocol Platform {
-    func createDevice() throws -> Device
+    init()
+    func createWindow(_ configuration: WindowConfiguration) throws -> Window
 }
 
-func createPlatform(forBackend backend: Backend) throws -> Platform {
-    switch backend {
-    case .platformDefault:
-        #if os(macOS) || os(iOS)
-        return PlatformMetal()
-        #else
-        throw RenderKitError.unsupportedPlatform
-        #endif
-    case .metal:
-        #if os(macOS) || os(iOS)
-        return PlatformMetal()
-        #else
-        throw RenderKitError.unsupportedPlatform
-        #endif
-    case .vulkan:
-        return PlatformVulkan()
-    default:
-        throw RenderKitError.unsupportedPlatform
+public func createPlatform() throws -> Platform {
+    #if os(macOS)
+    return MacOSPlatform()
+    #elseif os(Linux)
+    return LinuxPlatform()
+    #else
+    fatalError("Unsupported platform")
+    #endif
+}
+
+extension Dictionary where Value: Hashable {
+    func invert() -> [Value: Key] {
+        var result = [Value: Key]()
+        for (k, v) in self {
+            result[v] = k
+        }
+
+        return result
     }
 }

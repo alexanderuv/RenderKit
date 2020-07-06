@@ -2,7 +2,6 @@
 // Created by Alexander Ubillus on 3/27/20.
 //
 
-#if os(macOS) || os(iOS)
 import Foundation
 #if os(macOS)
 import AppKit
@@ -19,17 +18,20 @@ typealias PlatApplication = UIApplication
 
 import MetalKit
 
-class CocoaWindow: Window {
-    var clearColor: Color = .red
+public class CocoaWindow: Window {
 
     internal let nsWindow: RenderKitWindow
+    internal let nsWindowDelegate: RenderKitWindowDelegate
     let viewController: RenderKitViewController
-    var windowShouldClose = false
-    var renderDelegate: (() -> Void)?
 
-    required init(_ configuration: WindowConfiguration) {
-        let app = PlatApplication.shared
-        app.delegate = RenderKitAppDelegate.shared
+    // event handlers
+    public var keyboardEventHandler: ((KeyboardEvent) -> ())? = nil
+    public var mouseEventHandler: ((MouseEvent) -> ())? = nil
+    public var renderEventHandler: ((RenderEvent) -> ())? = nil
+    public var windowEventHandler: ((WindowEvent) -> ())? = nil
+
+    public required init(_ configuration: WindowConfiguration) {
+        nsWindowDelegate = RenderKitWindowDelegate()
 
         // create NSWindow
         let contentRect = NSMakeRect(0, 0, CGFloat(configuration.width), CGFloat(configuration.height));
@@ -57,61 +59,72 @@ class CocoaWindow: Window {
             nsWindow.zoom(nil)
         }
 
+        nsWindowDelegate.window = self
         nsWindow.title = configuration.title
+        nsWindow.delegate = nsWindowDelegate
         nsWindow.contentView = viewController.view
         nsWindow.makeFirstResponder(nsWindow.contentView)
         nsWindow.acceptsMouseMovedEvents = true
         nsWindow.isRestorable = false
     }
 
-    func show() {
+    public func show() {
         nsWindow.orderFront(nil)
-    }
 
-    func focusWindow() {
         NSApp.activate(ignoringOtherApps: true)
         nsWindow.makeKeyAndOrderFront(nil)
     }
 
-    func hide() {
-        nsWindow.orderBack(nil)
-    }
-
-    func shouldClose() -> Bool {
-        windowShouldClose
-    }
-
-    func pollEvents() {
-        while true {
-            let event = NSApp.nextEvent(
-                    matching: .any,
-                    until: .distantPast,
-                    inMode: .default,
-                    dequeue: true)
-
-            if event == nil {
-                break
-            }
-
-            NSApp.sendEvent(event!)
-        }
-    }
-
-    func getNativeWindow() -> Any {
+    public func getNativeWindow() -> Any {
         nsWindow
     }
 
-    func render() {
-        renderDelegate?()
-    }
-
-    func runEventLoop(_ delegate: @escaping () -> Void) {
-        renderDelegate = delegate
-        NSApp.run()
-    }
-
     func tearDown() {
+        // do appropriate tear down
+    }
 
+    public func pollEvents() {
+        autoreleasepool {
+            if !MacOSPlatform.finishedLaunching {
+                NSApp.run()
+            }
+
+            while true {
+                guard let event = NSApp.nextEvent(
+                        matching: .any,
+                        until: Date.distantPast,
+                        inMode: .default,
+                        dequeue: true) else {
+                    break
+                }
+
+                NSApp.sendEvent(event)
+            }
+        }
+    }
+
+    func raiseKeyboardEvent(_ event: KeyboardEvent) {
+        self.keyboardEventHandler?(event)
+    }
+
+    func raiseMouseEvent(_ event: MouseEvent) {
+        self.mouseEventHandler?(event)
+    }
+
+    func raiseRenderEvent(_ event: RenderEvent) {
+        self.renderEventHandler?(event)
+    }
+
+    func raiseWindowEvent(_ event: WindowEvent) {
+        self.windowEventHandler?(event)
+    }
+}
+
+class RenderKitWindowDelegate: NSObject, NSWindowDelegate {
+    var window: CocoaWindow!
+
+    func windowWillClose(_ notification: Notification) {
+        window.raiseWindowEvent(WindowEvent(type: .close))
     }
 }
 
@@ -130,5 +143,3 @@ func getStyleMask(_ configuration: WindowConfiguration) -> NSWindow.StyleMask {
 
     return styleMask
 }
-
-#endif

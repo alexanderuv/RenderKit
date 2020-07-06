@@ -4,13 +4,12 @@
 
 import Foundation
 
-class VulkanVertexBuffer<T> : VertexBuffer<T> {
-    override func unwrap() -> AnyObject? {
-        fatalError("Not implemented")
+class VulkanVertexBuffer : VertexBuffer {
+
+    func updateBuffer<T>(contents: [T]) {
     }
 
-    override func updateBuffer(contents: [T]) {
-        fatalError("Not implemented")
+    func unwrap() -> Any? {
+        nil
     }
-
 }

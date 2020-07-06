@@ -3,6 +3,7 @@
 //
 
 #if os(macOS) || os(iOS)
+
 import Foundation
 import MetalKit
 
@@ -36,21 +37,26 @@ class MetalDevice: Device {
         MetalPipeline(self.metalDevice, descriptor)
     }
 
-    func createVertexBuffer<T: VertexBuffer<V>, V>(withCount count: Int, vertexType: V.Type) -> Result<T, RenderKitError> {
-        if let newBuffer = MetalVertexBuffer<V>(self.metalDevice, count) {
-            return .success(newBuffer as! T)
+    func createVertexBuffer(withLayout layout: BufferLayout, count: Int) -> Result<VertexBuffer, RenderKitError> {
+        if let newBuffer = MetalVertexBuffer(self.metalDevice, layout, count) {
+            return .success(newBuffer)
         }
 
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
     }
 
     func createIndexBuffer(withCount count: Int) -> Result<IndexBuffer, RenderKitError> {
-        let totalLength = count * MemoryLayout<UInt16>.size
+        let totalLength = count * MemoryLayout<UInt16>.stride
         if let newBuffer = metalDevice.makeBuffer(length: totalLength, options: [.storageModeShared]) {
             return .success(MetalIndexBuffer(newBuffer))
         }
 
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
     }
+    
+    func unwrap() -> Any? {
+        self.metalDevice
+    }
 }
+
 #endif

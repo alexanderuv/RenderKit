@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import NIO
 
 public protocol CommandQueue {
     func createCommandBuffer() -> CommandBuffer
