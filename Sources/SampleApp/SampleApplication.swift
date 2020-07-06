@@ -9,7 +9,7 @@ import Cocoa
 typealias Vertex = SIMD4<Float>
 
 struct VertexData {
-    let position: SIMD3<Float>
+    let position: SIMD3<Float> // NOTE: Swift will treat this as a float4 due to alignment logic in the compiler
     let color: SIMD4<Float>
     
     init(position: SIMD3<Float>, color: SIMD4<Float>) {
@@ -33,20 +33,7 @@ class SampleApplication {
         let platform = try createPlatform()
         var window = try platform.createWindow(configuration)
         let backendImpl = Backend.platformDefault.createBackend(forPlatform: platform)
-        
-        let captureManager = MTLCaptureManager.shared()
-        
-        guard captureManager.supportsDestination(.gpuTraceDocument) else
-        {
-            print("Capture to a GPU tracefile is not supported")
-            return
-        }
-        
-        let captureDescriptor = MTLCaptureDescriptor()
-        captureDescriptor.captureObject = self.device
-        captureDescriptor.destination = .gpuTraceDocument
-        captureDescriptor.outputURL = URL(fileURLWithPath: "/Users/alexander/somethign")
-        
+                
         initializeRenderer(backendImpl, window)
         
         window.show()
@@ -56,23 +43,8 @@ class SampleApplication {
         window.keyboardEventHandler = handleKeyboardEvent
         window.mouseEventHandler = handleMouseEvent
         
-        self.triggerProgrammaticCapture()
-        
         while isRunning {
             window.pollEvents()
-        }
-    }
-    
-    func triggerProgrammaticCapture() {
-        let captureManager = MTLCaptureManager.shared()
-        let captureDescriptor = MTLCaptureDescriptor()
-        captureDescriptor.captureObject = self.device.unwrap()
-        do {
-            try captureManager.startCapture(with: captureDescriptor)
-        }
-        catch
-        {
-            fatalError("error when trying to capture: \(error)")
         }
     }
     
@@ -82,12 +54,6 @@ class SampleApplication {
     
     func handleKeyboardEvent(_ event: KeyboardEvent) {
         print("received: \(event)")
-        if event.keyCode == .keyEnter {
-            DispatchQueue.main.async {
-                let captureManager = MTLCaptureManager.shared()
-                captureManager.stopCapture()
-            }
-        }
     }
     
     public func handleWindowEvent(_ event: WindowEvent) {
@@ -95,10 +61,6 @@ class SampleApplication {
     }
     
     private func render(_ event: RenderEvent) {
-        self.renderInternal()
-    }
-    
-    private func renderInternal() {
         let commandBuffer = commandQueue.createCommandBuffer()
         
         let rendered = commandBuffer.doRenderPass(on: self.swapChain) {
@@ -120,7 +82,7 @@ class SampleApplication {
         
         let vertexLayout = BufferLayout(attributes:
             [
-                BufferLayoutAttribute(dataType: .float4, name: "position"),
+                BufferLayoutAttribute(dataType: .float4, name: "position"), // using float4 as that's the physical layout for the struct
                 BufferLayoutAttribute(dataType: .float4, name: "color")
         ], stride: MemoryLayout<VertexData>.stride)
         
