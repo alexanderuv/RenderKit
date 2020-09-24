@@ -6,7 +6,7 @@ import Foundation
 import RenderKit
 
 let configuration = WindowConfiguration(
-        title: "My demo app",
+        title: "RenderKit Demo",
         width: 800,
         height: 600
 )

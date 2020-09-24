@@ -12,10 +12,15 @@ class MetalPipeline: Pipeline {
     let shaderLibrary: MTLLibrary
 
     init(_ device: MTLDevice, _ descriptor: PipelineDescriptor) {
-        guard let shaderLibrary = try? device.makeLibrary(source: descriptor.shader.content, options: .none) else {
-            fatalError("Unable to create MTLLibrary")
+        let shaderLibrary: MTLLibrary
+        do {
+            var metalOptions = MTLCompileOptions()
+            metalOptions.languageVersion = .version2_2
+            shaderLibrary = try device.makeLibrary(source: descriptor.shader.content, options: metalOptions)
+        } catch {
+            fatalError("Unable to create MTLLibrary: " + error.localizedDescription)
         }
-
+        
         self.shaderLibrary = shaderLibrary
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         let vertexProgram = shaderLibrary.makeFunction(name: descriptor.shader.vertexFunction)
@@ -34,11 +39,11 @@ class MetalPipeline: Pipeline {
         var i = 0
         var currentOffset = 0
         for att in layout.attributes {
-            vertexDescriptor.attributes[i].format = att.dataType.toMetal()
+            vertexDescriptor.attributes[i].format = att.format.toMetal()
             vertexDescriptor.attributes[i].bufferIndex = 0
             vertexDescriptor.attributes[i].offset = currentOffset
 
-            currentOffset += att.dataType.size
+            currentOffset += att.stride
             i += 1
         }
         vertexDescriptor.layouts[0].stride = layout.stride

@@ -26,11 +26,15 @@ class MetalDevice: Device {
             fatalError("Invalid native window passed to create metal swapchain")
         }
 
-        return MetalSwapChain(self, window)
+        return MetalSwapChain(self, window: window)
+    }
+    
+    func createSwapChain(fromNativeHandle handle: Any) -> SwapChain {
+        MetalSwapChain(self, handle: handle)
     }
 
     func createSwapChain(offscreenSize size: NSSize) -> SwapChain {
-        MetalSwapChain(self, size)
+        MetalSwapChain(self, size: size)
     }
 
     func createPipeline(descriptor: PipelineDescriptor) -> Pipeline {

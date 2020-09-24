@@ -39,87 +39,29 @@ extension Color {
     }
 }
 
-extension BufferLayoutAttribute.DataType {
+extension BufferLayoutAttribute.DataFormat {
     func toMetal() -> MTLVertexFormat {
-        switch self.format {
-        case .float:
-            switch self.count {
-            case 1:
-                return .float
-            case 2:
-                return .float2
-            case 3:
-                return .float3
-            case 4:
-                return .float4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
-        case .half:
-            switch self.count {
-            case 1:
-                return .half
-            case 2:
-                return .half2
-            case 3:
-                return .half3
-            case 4:
-                return .half4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
-        case .uint:
-            switch self.count {
-            case 1:
-                return .uint
-            case 2:
-                return .uint2
-            case 3:
-                return .uint3
-            case 4:
-                return .uint4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
-        case .int:
-            switch self.count {
-            case 1:
-                return .int
-            case 2:
-                return .int2
-            case 3:
-                return .int3
-            case 4:
-                return .int4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
-        case .ushort:
-            switch self.count {
-            case 1:
-                return .ushort
-            case 2:
-                return .ushort2
-            case 3:
-                return .ushort3
-            case 4:
-                return .ushort4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
-        case .short:
-            switch self.count {
-            case 1:
-                return .short
-            case 2:
-                return .short2
-            case 3:
-                return .short3
-            case 4:
-                return .short4
-            default:
-                fatalError("Unsupported data type with format=\(self.format) and count=\(self.count)")
-            }
+        switch self {
+        case .float: return .float
+        case .float2: return .float2
+        case .float3: return .float3
+        case .float4: return .float4
+        case .int: return .int
+        case .int2: return .int2
+        case .int3: return .int3
+        case .int4: return .int4
+        case .short: return .short
+        case .short2: return .short2
+        case .short3: return .short3
+        case .short4: return .short4
+        case .uint: return .uint
+        case .uint2: return .uint2
+        case .uint3: return .uint3
+        case .uint4: return .uint4
+        case .ushort: return .ushort
+        case .ushort2: return .ushort2
+        case .ushort3: return .ushort3
+        case .ushort4: return .ushort4
         }
     }
 

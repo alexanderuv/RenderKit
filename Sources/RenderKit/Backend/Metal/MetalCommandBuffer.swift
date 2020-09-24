@@ -14,7 +14,6 @@ class MetalCommandBuffer: CommandBuffer {
     var currentSwapChain: MetalSwapChain? = nil
     var commandEncoder: MTLRenderCommandEncoder? = nil
     var clearColor: Color = .black
-    var currentDrawable: MTLDrawable? = nil
 
     public init(nativeBuffer: MTLCommandBuffer) {
         self.nativeBuffer = nativeBuffer
@@ -31,8 +30,6 @@ class MetalCommandBuffer: CommandBuffer {
             print("Unable to get next drawable from metal layer")
             return false
         }
-        
-        self.currentDrawable = drawable
 
         let descriptor = MTLRenderPassDescriptor()
         descriptor.colorAttachments[0].texture = drawable.texture
@@ -44,6 +41,9 @@ class MetalCommandBuffer: CommandBuffer {
             renderPass()
 
             encoder.endEncoding()
+
+            self.nativeBuffer.present(drawable)
+            self.nativeBuffer.commit()
 
             return true
         }
@@ -62,11 +62,21 @@ class MetalCommandBuffer: CommandBuffer {
 
         encoder.setRenderPipelineState(pipeline.pipelineState)
     }
-
-    func submit() {
-        if let drawable = self.currentDrawable {
-            self.nativeBuffer.present(drawable)
-            self.nativeBuffer.commit()
+    
+    func setUniforms<T>(_ uniforms: T, slot: Int, stage: StageFlags) {
+        guard let encoder = self.commandEncoder else {
+            fatalError("Attempting to call setPipeline outside before calling beginRenderPass")
+        }
+        
+        let len = MemoryLayout<T>.stride
+        var uniformsCopy = uniforms
+        
+        if stage.contains(.vertex) {
+            encoder.setVertexBytes(&uniformsCopy, length: len, index: slot)
+        }
+        
+        if stage.contains(.fragment) {
+            encoder.setFragmentBytes(&uniformsCopy, length: len, index: slot)
         }
     }
 

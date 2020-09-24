@@ -13,18 +13,18 @@ class MetalSwapChain: SwapChain {
     static let counter = AtomicInteger(value: 0)
 
     let metalLayer: CAMetalLayer
-    let id: Int
+    let id = MetalSwapChain.counter.incrementAndGet()
 
-    init(_ device: MetalDevice, _ size: NSSize) {
-        id = MetalSwapChain.counter.incrementAndGet()
-
+    init(_ device: MetalDevice, size: NSSize) {
         metalLayer = MetalSwapChain.createMetalLayer(device)
         metalLayer.drawableSize = size
     }
+    
+    init(_ device: MetalDevice, handle: Any) {
+        metalLayer = handle as! CAMetalLayer
+    }
 
-    init(_ device: MetalDevice, _ window: CocoaWindow) {
-        id = MetalSwapChain.counter.incrementAndGet()
-
+    init(_ device: MetalDevice, window: CocoaWindow) {
         metalLayer = MetalSwapChain.createMetalLayer(device)
         let view = window.viewController.view
 

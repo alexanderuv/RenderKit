@@ -10,7 +10,7 @@ public protocol CommandBuffer {
     func setPipeline(_ pipeline: Pipeline)
     func setVertexBuffer(_ buffer: VertexBuffer, offset: Int)
     func setIndexBuffer(_ buffer: IndexBuffer)
+    func setUniforms<T>(_ uniforms: T, slot: Int, stage: StageFlags)
     func drawIndexed(primitive: PrimitiveType, indexCount: Int, indexOffset: Int)
-    func submit()
     func drawVertices(type: PrimitiveType, count: Int, offset: Int)
 }

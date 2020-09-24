@@ -9,13 +9,22 @@ import Cocoa
 typealias Vertex = SIMD4<Float>
 
 struct VertexData {
-    let position: SIMD3<Float> // NOTE: Swift will treat this as a float4 due to alignment logic in the compiler
-    let color: SIMD4<Float>
+    let position: SIMD3<Float>
+    let normal: SIMD3<Float>
+    let uv: SIMD2<Float>
     
-    init(position: SIMD3<Float>, color: SIMD4<Float>) {
+    init(position: SIMD3<Float>) {
         self.position = position
-        self.color = color
+        self.normal = .zero
+        self.uv = .zero
     }
+}
+
+struct UniformData {
+    var modelMatrix: Matrix4x4 = .zero
+    var viewMatrix: Matrix4x4 = .identity
+    var projectionMatrix: Matrix4x4 = .identity
+    var time: Float = 0
 }
 
 class SampleApplication {
@@ -29,10 +38,14 @@ class SampleApplication {
     private var swapChain: SwapChain!
     private var pipeline: Pipeline!
     
+    private var uniforms = UniformData()
+    
     public func run(_ configuration: WindowConfiguration) throws {
         let platform = try createPlatform()
         var window = try platform.createWindow(configuration)
         let backendImpl = Backend.platformDefault.createBackend(forPlatform: platform)
+        
+        uniforms.modelMatrix = Matrix4x4.identity.rotateZ(degrees: 0)
                 
         initializeRenderer(backendImpl, window)
         
@@ -62,28 +75,28 @@ class SampleApplication {
     
     private func render(_ event: RenderEvent) {
         let commandBuffer = commandQueue.createCommandBuffer()
-        
-        let rendered = commandBuffer.doRenderPass(on: self.swapChain) {
+
+        _ = commandBuffer.doRenderPass(on: self.swapChain) {
             
             commandBuffer.setPipeline(pipeline)
             
+            // update the contents every frame
+            uniforms.time += 0.1
+            
             commandBuffer.setVertexBuffer(vertexBuffer, offset: 0)
             commandBuffer.setIndexBuffer(indexBuffer)
+            commandBuffer.setUniforms(uniforms, slot: 1, stage: .all)
             commandBuffer.drawIndexed(primitive: .triangle, indexCount: 3, indexOffset: 0)
-        }
-        
-        if rendered {
-            commandBuffer.submit()
         }
     }
     
     private func initializeRenderer(_ backend: BackendProtocol, _ window: Window) {
         device = try! backend.createDevice()
         
-        let vertexLayout = BufferLayout(attributes:
-            [
-                BufferLayoutAttribute(dataType: .float4, name: "position"), // using float4 as that's the physical layout for the struct
-                BufferLayoutAttribute(dataType: .float4, name: "color")
+        let vertexLayout = BufferLayout(attributes: [
+                BufferLayoutAttribute(name: "position", format: .float3),
+                BufferLayoutAttribute(name: "normal", format: .float3),
+                BufferLayoutAttribute(name: "uv", format: .float2)
         ], stride: MemoryLayout<VertexData>.stride)
         
         guard let vertexBuffer = try? device.createVertexBuffer(withLayout: vertexLayout, count: 3).get() else {
@@ -91,9 +104,9 @@ class SampleApplication {
         }
         
         let vertices: [VertexData] = [
-            VertexData(position: [0.0, 1.0, 0.0], color: [0.8,1,0.5,1]),
-            VertexData(position: [-1.0, -1.0, 0.0], color: [0.5,0.8,1,1]),
-            VertexData(position: [1.0, -1.0, 0.0], color: [1,0.5,0.8,1])
+            VertexData(position: [0.0, 1.0, 0.0]),
+            VertexData(position: [-1.0, -1.0, 0.0]),
+            VertexData(position: [1.0, -1.0, 0.0])
         ]
         
         vertexBuffer.updateBuffer(contents: vertices)
@@ -109,31 +122,44 @@ class SampleApplication {
         
         commandQueue = device.createCommandQueue()
         swapChain = device.createSwapChain(fromWindow: window)
-
+        
         let shaderContent =
         """
+        #include <metal_stdlib>
+        using namespace metal;
+
         struct VertexIn {
             float3 position [[attribute(0)]];
-            float4 color [[attribute(1)]];
+            float3 normal [[attribute(1)]];
+            float2 uv [[attribute(2)]];
         };
 
         struct VertexOut {
             float4 position [[position]];
-            float4 color;
+            float3 normal;
         };
 
-        vertex VertexOut vertexMain(VertexIn vertex_in [[stage_in]])
+        struct Uniforms {
+            float4x4 model;
+            float4x4 view;
+            float4x4 projection;
+            float time;
+        };
+
+        vertex VertexOut vertexMain(VertexIn vertex_in [[stage_in]],
+                                    constant Uniforms& uniforms [[ buffer(1) ]])
         {
             VertexOut vertex_out;
-            vertex_out.position = float4(vertex_in.position, 1.0);
-            vertex_out.color = vertex_in.color;
+            vertex_out.position = uniforms.projection * uniforms.view * uniforms.model * float4(vertex_in.position, 1.0);
+            vertex_out.normal = vertex_in.normal;
             return vertex_out;
         }
 
-        fragment float4 fragmentMain(VertexOut vertex_in [[stage_in]]) {
-            return vertex_in.color;
+        fragment float4 fragmentMain(VertexOut vertex_in [[stage_in]],
+                                     constant Uniforms& uniforms [[ buffer(1) ]]) {
+            auto x = sin(uniforms.time) + 0.5;
+            return float4(x);
         }
-        
         """
         
         let shader = Shader(
