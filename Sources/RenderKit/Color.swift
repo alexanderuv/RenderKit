@@ -5,23 +5,39 @@
 import Foundation
 
 public struct Color {
-    public var r: Float = 0
-    public var g: Float = 0
-    public var b: Float = 0
-    public var a: Float = 0
-
+    
+    private var rgba: SIMD4<Float>
+    
+    public var r: Float {
+        rgba.x
+    }
+    
+    public var g: Float {
+        rgba.y
+    }
+    
+    public var b: Float {
+        rgba.z
+    }
+    
+    public var a: Float {
+        rgba.w
+    }
+    
     public init(red: Float, green: Float, blue: Float, alpha: Float) {
-        self.r = red
-        self.g = green
-        self.b = blue
-        self.a = alpha
+        self.rgba = [red, green, blue, alpha]
     }
 
     public init(red: Float, green: Float, blue: Float) {
-        self.init(red: red, green: green, blue: blue, alpha: 1)
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+    
+    public init(rgba: Vector4) {
+        self.rgba = rgba
     }
 
     public init() {
+        self = .white
     }
 
     public static let black = Color(red: 0, green: 0, blue: 0)

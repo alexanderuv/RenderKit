@@ -13,6 +13,7 @@ public protocol Window {
     var windowEventHandler: ((WindowEvent) -> ())? { get set }
 
     func show()
+    func showAndLoopUntilExit()
     func getNativeWindow() -> Any
 
     func pollEvents()

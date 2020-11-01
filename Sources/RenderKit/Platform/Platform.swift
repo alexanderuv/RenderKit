@@ -7,6 +7,7 @@ import Foundation
 public protocol Platform {
     init()
     func createWindow(_ configuration: WindowConfiguration) throws -> Window
+    func getHighResTime() -> Int
 }
 
 public func createPlatform() throws -> Platform {

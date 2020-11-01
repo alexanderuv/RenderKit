@@ -74,6 +74,15 @@ public class CocoaWindow: Window {
         NSApp.activate(ignoringOtherApps: true)
         nsWindow.makeKeyAndOrderFront(nil)
     }
+    
+    public func runMessageLoop() {
+        NSApp.run()
+    }
+    
+    public func showAndLoopUntilExit() {
+        show()
+        runMessageLoop()
+    }
 
     public func getNativeWindow() -> Any {
         nsWindow

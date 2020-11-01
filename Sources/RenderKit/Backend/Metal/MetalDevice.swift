@@ -28,13 +28,9 @@ class MetalDevice: Device {
 
         return MetalSwapChain(self, window: window)
     }
-    
+
     func createSwapChain(fromNativeHandle handle: Any) -> SwapChain {
         MetalSwapChain(self, handle: handle)
-    }
-
-    func createSwapChain(offscreenSize size: NSSize) -> SwapChain {
-        MetalSwapChain(self, size: size)
     }
 
     func createPipeline(descriptor: PipelineDescriptor) -> Pipeline {
@@ -57,7 +53,7 @@ class MetalDevice: Device {
 
         return .failure(RenderKitError.errorCreatingHardwareBuffer)
     }
-    
+
     func unwrap() -> Any? {
         self.metalDevice
     }

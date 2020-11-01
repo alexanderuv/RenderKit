@@ -11,7 +11,6 @@ public protocol Device {
     func createCommandQueue() -> CommandQueue
     func createSwapChain(fromWindow window: Window) -> SwapChain
     func createSwapChain(fromNativeHandle handle: Any) -> SwapChain
-    func createSwapChain(offscreenSize size: NSSize) -> SwapChain
     
     func unwrap() -> Any?
 }

@@ -14,7 +14,7 @@ class MetalPipeline: Pipeline {
     init(_ device: MTLDevice, _ descriptor: PipelineDescriptor) {
         let shaderLibrary: MTLLibrary
         do {
-            var metalOptions = MTLCompileOptions()
+            let metalOptions = MTLCompileOptions()
             metalOptions.languageVersion = .version2_2
             shaderLibrary = try device.makeLibrary(source: descriptor.shader.content, options: metalOptions)
         } catch {
