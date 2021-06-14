@@ -2,8 +2,6 @@
 // Created by Alexander Ubillus on 6/27/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
 
@@ -16,5 +14,3 @@ class MetalBackend: BackendProtocol {
         return MetalDevice(device)
     }
 }
-
-#endif

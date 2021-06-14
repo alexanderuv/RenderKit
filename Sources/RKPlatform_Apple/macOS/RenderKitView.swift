@@ -2,8 +2,6 @@
 // Created by Alexander Ubillus on 4/10/20.
 //
 
-#if os(macOS)
-
 import Foundation
 import AppKit
 
@@ -320,5 +318,3 @@ fileprivate func macToRkMap() -> [UInt16: KeyCode] {
         0x4E: .keyNumPadSubtract
     ]
 }
-
-#endif

@@ -6,7 +6,7 @@ import Foundation
 
 public struct Color {
     
-    private var rgba: SIMD4<Float>
+    private var rgba: Vec4
     
     public var r: Float {
         rgba.x
@@ -32,7 +32,7 @@ public struct Color {
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
     
-    public init(rgba: Vector4) {
+    public init(rgba: Vec4) {
         self.rgba = rgba
     }
 

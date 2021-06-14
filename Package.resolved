@@ -2,12 +2,48 @@
   "object": {
     "pins": [
       {
+        "package": "cassowary",
+        "repositoryURL": "https://github.com/compnerd/cassowary.git",
+        "state": {
+          "branch": "main",
+          "revision": "a438611231901f9f350da27857d786f7979d578b",
+          "version": null
+        }
+      },
+      {
+        "package": "SGLMath",
+        "repositoryURL": "https://github.com/alexanderuv/Math.git",
+        "state": {
+          "branch": null,
+          "revision": "5ee7dd62599490614e8eef3bc516234a5dae849e",
+          "version": "3.1.0"
+        }
+      },
+      {
+        "package": "SwiftCOM",
+        "repositoryURL": "https://github.com/compnerd/swift-com.git",
+        "state": {
+          "branch": "main",
+          "revision": "ca762e3af3fca67ed7374e20e11ba719d9f691c6",
+          "version": null
+        }
+      },
+      {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
-          "branch": null,
-          "revision": "74d7b91ceebc85daf387ebb206003f78813f71aa",
-          "version": "1.2.0"
+          "branch": "main",
+          "revision": "d8af258aecd93cd8604e74ade3c0fe438bac13f8",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftWin32",
+        "repositoryURL": "https://github.com/compnerd/swift-win32",
+        "state": {
+          "branch": "main",
+          "revision": "aa8f904b21894bc4c0da43416a6b30a3177d6173",
+          "version": null
         }
       }
     ]

@@ -9,7 +9,7 @@ import CoreVideo
 
 typealias PlatWindow = NSWindow
 typealias PlatApplication = NSApplication
-#else
+#elseif os(iOS)
 import UIKit
 
 typealias PlatWindow = UIWindow

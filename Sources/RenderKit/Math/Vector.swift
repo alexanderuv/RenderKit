@@ -7,6 +7,10 @@
 
 import Foundation
 
-extension Vector3 {
+extension Vec3 {
+    public static let zero = Vec3(0)
+}
 
+extension Vec2 {
+    public static let zero = Vec2(0)
 }

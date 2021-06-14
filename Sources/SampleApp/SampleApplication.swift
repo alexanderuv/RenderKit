@@ -4,16 +4,18 @@
 
 import Foundation
 import RenderKit
+#if os(macOS)
 import Cocoa
+#endif
 
-typealias Vertex = SIMD4<Float>
+typealias Vertex = Vec4
 
 struct VertexData {
-    let position: SIMD3<Float>
-    let normal: SIMD3<Float>
-    let uv: SIMD2<Float>
+    let position: Vec3
+    let normal: Vec3
+    let uv: Vec2
     
-    init(position: SIMD3<Float>) {
+    init(position: Vec3) {
         self.position = position
         self.normal = .zero
         self.uv = .zero
@@ -21,9 +23,9 @@ struct VertexData {
 }
 
 struct UniformData {
-    var modelMatrix: Matrix4x4 = .zero
-    var viewMatrix: Matrix4x4 = .identity
-    var projectionMatrix: Matrix4x4 = .identity
+    var modelMatrix: Mat4 = .zero
+    var viewMatrix: Mat4 = .identity
+    var projectionMatrix: Mat4 = .identity
     var time: Float = 0
 }
 
@@ -45,7 +47,7 @@ class SampleApplication {
         var window = try platform.createWindow(configuration)
         let backendImpl = Backend.platformDefault.createBackend(forPlatform: platform)
         
-        uniforms.modelMatrix = Matrix4x4.identity.rotateZ(degrees: 0)
+        uniforms.modelMatrix = Mat4.identity.rotateZ(degrees: 0)
                 
         initializeRenderer(backendImpl, window)
         

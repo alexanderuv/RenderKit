@@ -2,8 +2,6 @@
 // Created by Alexander Ubillus on 3/27/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
 import Cocoa
@@ -176,6 +174,4 @@ fileprivate struct TISInfo {
 extension MacOSPlatform {
     
 }
-
-#endif
 

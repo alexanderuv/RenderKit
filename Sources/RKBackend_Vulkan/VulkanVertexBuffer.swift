@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import RKCore
 
 class VulkanVertexBuffer : VertexBuffer {
 

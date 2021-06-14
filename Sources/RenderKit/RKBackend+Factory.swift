@@ -1,19 +1,16 @@
 //
-// Created by Alexander Ubillus on 6/27/20.
+// Created by alexander on 6/14/2021.
 //
 
 import Foundation
+import RKCore
 
-public protocol BackendProtocol {
-    func createDevice() throws -> Device
-}
-
-public enum Backend {
-    case platformDefault
-    case metal
-    case directX12
-    case vulkan
-}
+#if os(macOS) || os(iOS)
+import RKBackend_Metal
+#elseif os(Windows)
+import RKBackend_Vulkan
+import RKBackend_DX12
+#endif
 
 extension Backend {
     public func createBackend(forPlatform platform: Platform) -> BackendProtocol {
@@ -22,6 +19,10 @@ extension Backend {
             #if os(macOS)
 
             return MetalBackend()
+
+            #elseif os(Windows)
+
+            return DX12Backend()
 
             #elseif os(Linux)
 
