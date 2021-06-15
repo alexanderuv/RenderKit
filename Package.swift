@@ -8,7 +8,7 @@ let package = Package(
         products: [
 //            .library(name: "RenderKitStatic", type: .static, targets: ["RenderKit"]),
             .library(name: "RenderKitDynamic", type: .dynamic, targets: ["RenderKit"]),
-            .executable(name: "SampleApp", targets: ["SampleApp"]),
+            .executable(name: "FadingTriangle", targets: ["FadingTriangle"]),
         ],
         dependencies: [
             .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
@@ -37,8 +37,9 @@ let package = Package(
                         .byName(name: "RKBackend_DX12", condition: .when(platforms: [.windows])),
                     ]),
             .executableTarget(
-                    name: "SampleApp",
-                    dependencies: ["RenderKit"]),
+                    name: "FadingTriangle",
+                    dependencies: ["RenderKit"],
+                    path: "Samples/FadingTriangle"),
             .testTarget(
                     name: "RenderKitTests",
                     dependencies: ["RenderKit"]),
