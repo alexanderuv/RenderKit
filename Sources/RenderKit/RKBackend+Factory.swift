@@ -7,6 +7,8 @@ import RKCore
 
 #if os(macOS) || os(iOS)
 import RKBackend_Metal
+#elseif os(Linux)
+import RKBackend_Vulkan
 #elseif os(Windows)
 import RKBackend_Vulkan
 import RKBackend_DX12

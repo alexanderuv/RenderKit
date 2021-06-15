@@ -7,6 +7,8 @@ import RKCore
 
 #if os(macOS) || os(iOS)
 import RKPlatform_Apple
+#elseif os(Linux)
+import RKPlatform_Linux
 #elseif os(Windows)
 import RKPlatform_Windows
 #endif

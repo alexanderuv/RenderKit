@@ -31,6 +31,7 @@ let package = Package(
                     dependencies: [
                         .byName(name: "RKPlatform_Apple", condition: .when(platforms: [.macOS, .iOS])),
                         .byName(name: "RKPlatform_Windows", condition: .when(platforms: [.windows])),
+                        .byName(name: "RKPlatform_Linux", condition: .when(platforms: [.linux])),
                         .byName(name: "RKBackend_Metal", condition: .when(platforms: [.macOS, .iOS])),
                         .byName(name: "RKBackend_Vulkan", condition: .when(platforms: [.windows, .linux])),
                         .byName(name: "RKBackend_DX12", condition: .when(platforms: [.windows])),
