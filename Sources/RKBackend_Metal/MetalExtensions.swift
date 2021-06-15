@@ -2,10 +2,9 @@
 // Created by Alexander Ubillus on 3/30/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
 
 extension PixelFormat {
     func toMetal() -> MTLPixelFormat {
@@ -66,5 +65,3 @@ extension BufferLayoutAttribute.DataFormat {
     }
 
 }
-
-#endif

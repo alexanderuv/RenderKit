@@ -2,10 +2,9 @@
 // Created by Alexander Ubillus on 7/11/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
 
 class MetalUniformBuffer: UniformBuffer {
 
@@ -28,5 +27,3 @@ class MetalUniformBuffer: UniformBuffer {
         buffer
     }
 }
-
-#endif

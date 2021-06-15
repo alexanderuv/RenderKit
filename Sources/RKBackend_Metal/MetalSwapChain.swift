@@ -2,10 +2,10 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
+import RKPlatform_Apple
 
 class MetalSwapChain: SwapChain {
 
@@ -24,15 +24,9 @@ class MetalSwapChain: SwapChain {
         metalLayer = handle as! CAMetalLayer
     }
 
-    init(_ device: MetalDevice, window: CocoaWindow) {
+    init(_ device: MetalDevice, window: MetalEnabled) {
         metalLayer = MetalSwapChain.createMetalLayer(device)
-        let view = window.viewController.view
-
-        metalLayer.drawableSize = view.convertToBacking(view.bounds.size)
-        metalLayer.bounds = view.bounds
-
-        view.wantsLayer = true
-        view.layer = metalLayer
+        window.enableMetal(metalLayer)
     }
 
     private static func createMetalLayer(_ device: MetalDevice) -> CAMetalLayer {
@@ -43,5 +37,3 @@ class MetalSwapChain: SwapChain {
         return metalLayer
     }
 }
-
-#endif

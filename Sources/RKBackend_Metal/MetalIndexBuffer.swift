@@ -5,6 +5,7 @@
 
 import Foundation
 import MetalKit
+import RKCore
 
 class MetalIndexBuffer: IndexBuffer {
     let hwBuffer: MTLBuffer

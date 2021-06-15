@@ -2,10 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
 
 class MetalVertexBuffer: VertexBuffer{
 
@@ -34,5 +33,3 @@ class MetalVertexBuffer: VertexBuffer{
         hwBuffer
     }
 }
-
-#endif

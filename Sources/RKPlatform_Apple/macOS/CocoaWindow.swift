@@ -17,6 +17,7 @@ typealias PlatApplication = UIApplication
 #endif
 
 import MetalKit
+import RKCore
 
 public class CocoaWindow: Window {
 
@@ -126,6 +127,18 @@ public class CocoaWindow: Window {
 
     func raiseWindowEvent(_ event: WindowEvent) {
         self.windowEventHandler?(event)
+    }
+}
+
+extension CocoaWindow: MetalEnabled {
+    public func enableMetal(_ metalLayer: CAMetalLayer) {
+        let view = self.viewController.view
+
+        metalLayer.drawableSize = view.convertToBacking(view.bounds.size)
+        metalLayer.bounds = view.bounds
+
+        view.wantsLayer = true
+        view.layer = metalLayer
     }
 }
 

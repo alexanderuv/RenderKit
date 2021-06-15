@@ -29,6 +29,12 @@ public enum MouseButton {
 }
 
 public struct MouseEvent {
+    public init(x: Int, y: Int, type: EventType, button: MouseButton) {
+        self.x = x
+        self.y = y
+        self.type = type
+        self.button = button
+    }
 
     public enum EventType {
         case buttonPressed,
@@ -44,6 +50,9 @@ public struct MouseEvent {
 }
 
 public struct RenderEvent {
+    public init() {
+
+    }
 }
 
 public struct WindowEvent {

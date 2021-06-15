@@ -6,6 +6,7 @@ import Foundation
 import MetalKit
 import Cocoa
 import Carbon
+import RKCore
 
 public class MacOSPlatform: Platform {
     

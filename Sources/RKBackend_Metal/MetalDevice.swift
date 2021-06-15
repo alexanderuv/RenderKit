@@ -2,10 +2,10 @@
 // Created by Alexander Ubillus on 3/30/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
+import RKPlatform_Apple
 
 class MetalDevice: Device {
     let metalDevice: MTLDevice
@@ -22,7 +22,7 @@ class MetalDevice: Device {
     }
 
     func createSwapChain(fromWindow window: Window) -> SwapChain {
-        guard let window = window as? CocoaWindow else {
+        guard let window = window as? MetalEnabled else {
             fatalError("Invalid native window passed to create metal swapchain")
         }
 
@@ -58,5 +58,3 @@ class MetalDevice: Device {
         self.metalDevice
     }
 }
-
-#endif

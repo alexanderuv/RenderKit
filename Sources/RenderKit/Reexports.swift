@@ -28,3 +28,8 @@ public typealias KeyCode = RKCore.KeyCode
 
 public typealias Platform = RKCore.Platform
 public typealias Window = RKCore.Window
+
+public typealias Vec2 = RKCore.Vec2
+public typealias Vec3 = RKCore.Vec3
+public typealias Vec4 = RKCore.Vec4
+public typealias Mat4 = RKCore.Mat4

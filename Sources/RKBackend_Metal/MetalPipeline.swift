@@ -2,10 +2,9 @@
 // Created by Alexander Ubillus on 3/29/20.
 //
 
-#if os(macOS) || os(iOS)
-
 import Foundation
 import MetalKit
+import RKCore
 
 class MetalPipeline: Pipeline {
     let pipelineState: MTLRenderPipelineState
@@ -52,5 +51,3 @@ class MetalPipeline: Pipeline {
         return vertexDescriptor
     }
 }
-
-#endif

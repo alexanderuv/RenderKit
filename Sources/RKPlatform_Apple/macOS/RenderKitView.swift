@@ -4,6 +4,7 @@
 
 import Foundation
 import AppKit
+import RKCore
 
 class RenderKitView: NSView, CALayerDelegate, NSWindowDelegate {
 
@@ -317,4 +318,15 @@ fileprivate func macToRkMap() -> [UInt16: KeyCode] {
         0x43: .keyNumPadMultiply,
         0x4E: .keyNumPadSubtract
     ]
+}
+
+extension Dictionary where Value: Hashable {
+    func invert() -> [Value: Key] {
+        var result = [Value: Key]()
+        for (k, v) in self {
+            result[v] = k
+        }
+
+        return result
+    }
 }

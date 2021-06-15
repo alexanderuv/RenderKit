@@ -16,18 +16,19 @@ let package = Package(
             .package(name: "SwiftWin32", url: "https://github.com/compnerd/swift-win32", .branch("main")),
         ],
         targets: [
-            .target(name: "RKCore"),
+            .target(name: "RKCore", dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "SGLMath", package: "SGLMath")
+            ]),
             .target(name: "RKPlatform_Apple", dependencies: [.byName(name: "RKCore")]),
             .target(name: "RKPlatform_Linux", dependencies: [.byName(name: "RKCore")]),
             .target(name: "RKPlatform_Windows", dependencies: [.byName(name: "RKCore"), .byName(name: "SwiftWin32")]),
-            .target(name: "RKBackend_Metal", dependencies: [.byName(name: "RKCore")]),
+            .target(name: "RKBackend_Metal", dependencies: [.byName(name: "RKCore"), .byName(name: "RKPlatform_Apple")]),
             .target(name: "RKBackend_Vulkan", dependencies: [.byName(name: "RKCore")]),
             .target(name: "RKBackend_DX12", dependencies: [.byName(name: "RKCore")]),
             .target(
                     name: "RenderKit",
                     dependencies: [
-                        .product(name: "Logging", package: "swift-log"),
-                        .byName(name: "SGLMath", condition: .when(platforms: [.windows, .linux])),
                         .byName(name: "RKPlatform_Apple", condition: .when(platforms: [.macOS, .iOS])),
                         .byName(name: "RKPlatform_Windows", condition: .when(platforms: [.windows])),
                         .byName(name: "RKBackend_Metal", condition: .when(platforms: [.macOS, .iOS])),
@@ -42,5 +43,6 @@ let package = Package(
                     dependencies: ["RenderKit"]),
         ]
 )
+
 import PackageDescription
 

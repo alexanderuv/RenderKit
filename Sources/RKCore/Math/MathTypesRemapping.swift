@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import SGLMath // Linux/Windows
+import SGLMath
 
 public typealias Vec2 = Vector2<Float>
 public typealias Vec3 = Vector3<Float>
